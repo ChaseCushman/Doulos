@@ -9,19 +9,11 @@
 <body>
     <div class="container">
         <h1>Task Manager</h1>
-        <div id="login-form" class="form-container">
-            <h2>Login</h2>
-            <form id="login-form">
-                <input type="email" id="email" placeholder="Email" required>
-                <input type="password" id="password" placeholder="Password" required>
-                <button type="submit" onclick="login()">Login</button>
-            </form>
-        </div>
-        <div id="task-form" class="form-container hidden">
+        <div id="task-form">
             <h2>Add Task</h2>
-            <form id="task-form">
-                <input type="text" id="task" placeholder="Task" required>
-                <button type="submit" onclick="addTask()">Add Task</button>
+            <form id="add-task-form">
+                <input type="text" id="task" placeholder="Enter task" required>
+                <button type="submit">Add Task</button>
             </form>
         </div>
         <div id="task-list">
