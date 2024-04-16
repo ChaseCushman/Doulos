@@ -18,7 +18,7 @@ app.post('/tasks', async (req, res) => {
     const { userId, task } = req.body;
 
     const params = {
-        TableName: 'TaskManager',
+        TableName: 'DoulosDB',
         Item: {
             userId: userId,
             taskId: Date.now().toString(), // Generate unique task ID
@@ -41,7 +41,7 @@ app.get('/tasks/:userId', async (req, res) => {
     const userId = req.params.userId;
 
     const params = {
-        TableName: 'TaskManager',
+        TableName: 'DoulosDB',
         KeyConditionExpression: 'userId = :userId',
         ExpressionAttributeValues: {
             ':userId': userId
@@ -62,7 +62,7 @@ app.put('/tasks/:userId/:taskId/complete', async (req, res) => {
     const { userId, taskId } = req.params;
 
     const params = {
-        TableName: 'TaskManager',
+        TableName: 'DoulosDB',
         Key: {
             userId: userId,
             taskId: taskId
@@ -88,7 +88,7 @@ app.delete('/tasks/:userId/:taskId', async (req, res) => {
     const { userId, taskId } = req.params;
 
     const params = {
-        TableName: 'TaskManager',
+        TableName: 'DoulosDBr',
         Key: {
             userId: userId,
             taskId: taskId
