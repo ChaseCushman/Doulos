@@ -1,109 +1,57 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const AWS = require('aws-sdk');
+document.addEventListener('DOMContentLoaded', function() {
+    const taskForm = document.getElementById('add-task-form');
+    const taskList = document.getElementById('task-list-items');
 
-const app = express();
-const port = 3000;
-
-// Configure AWS SDK
-AWS.config.update({ region: 'us-east-2' });
-
-// Initialize DynamoDB
-const dynamoDB = new AWS.DynamoDB.DocumentClient();
-
-app.use(bodyParser.json());
-
-// Endpoint to add a task
-app.post('/tasks', async (req, res) => {
-    const { userId, task } = req.body;
-
-    const params = {
-        TableName: 'DoulosDB',
-        Item: {
-            userId: userId,
-            taskId: Date.now().toString(), // Generate unique task ID
-            taskName: task,
-            completed: false
+    // Function to fetch tasks from API and render them
+    async function fetchTasks() {
+        try {
+            const response = await fetch('https://uy5j64sv72.execute-api.us-east-2.amazonaws.com/dev/tasks');
+            const data = await response.json();
+            renderTasks(data);
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
         }
-    };
-
-    try {
-        await dynamoDB.put(params).promise();
-        res.status(201).json({ message: 'Task added successfully' });
-    } catch (error) {
-        console.error('Error adding task to DynamoDB:', error);
-        res.status(500).json({ error: 'Failed to add task' });
     }
-});
 
-// Endpoint to get all tasks for a user
-app.get('/tasks/:userId', async (req, res) => {
-    const userId = req.params.userId;
+    // Function to render tasks in the UI
+    function renderTasks(tasks) {
+        taskList.innerHTML = '';
+        tasks.forEach(task => {
+            const listItem = document.createElement('li');
+            listItem.textContent = task.taskName;
+            taskList.appendChild(listItem);
+        });
+    }
 
-    const params = {
-        TableName: 'DoulosDB',
-        KeyConditionExpression: 'userId = :userId',
-        ExpressionAttributeValues: {
-            ':userId': userId
+    // Function to add a new task
+    async function addTask(taskName) {
+        try {
+            const response = await fetch('https://uy5j64sv72.execute-api.us-east-2.amazonaws.com/dev/tasks', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ taskName })
+            });
+            if (response.ok) {
+                // If the task was added successfully, fetch and render updated tasks
+                fetchTasks();
+            } else {
+                console.error('Failed to add task');
+            }
+        } catch (error) {
+            console.error('Error adding task:', error);
         }
-    };
-
-    try {
-        const data = await dynamoDB.query(params).promise();
-        res.status(200).json(data.Items);
-    } catch (error) {
-        console.error('Error getting tasks from DynamoDB:', error);
-        res.status(500).json({ error: 'Failed to retrieve tasks' });
     }
-});
 
-// Endpoint to mark a task as completed
-app.put('/tasks/:userId/:taskId/complete', async (req, res) => {
-    const { userId, taskId } = req.params;
+    // Event listener for submitting the task form
+    taskForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const taskInput = document.getElementById('task').value;
+        addTask(taskInput);
+        document.getElementById('task').value = ''; // Clear input field after adding task
+    });
 
-    const params = {
-        TableName: 'DoulosDB',
-        Key: {
-            userId: userId,
-            taskId: taskId
-        },
-        UpdateExpression: 'set completed = :completed',
-        ExpressionAttributeValues: {
-            ':completed': true
-        },
-        ReturnValues: 'UPDATED_NEW'
-    };
-
-    try {
-        await dynamoDB.update(params).promise();
-        res.status(200).json({ message: 'Task marked as completed' });
-    } catch (error) {
-        console.error('Error marking task as completed:', error);
-        res.status(500).json({ error: 'Failed to mark task as completed' });
-    }
-});
-
-// Endpoint to delete a task
-app.delete('/tasks/:userId/:taskId', async (req, res) => {
-    const { userId, taskId } = req.params;
-
-    const params = {
-        TableName: 'DoulosDBr',
-        Key: {
-            userId: userId,
-            taskId: taskId
-        }
-    };
-
-    try {
-        await dynamoDB.delete(params).promise();
-        res.status(200).json({ message: 'Task deleted successfully' });
-    } catch (error) {
-        console.error('Error deleting task:', error);
-        res.status(500).json({ error: 'Failed to delete task' });
-    }
-});
-
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    // Fetch tasks when the page loads
+    fetchTasks();
 });
