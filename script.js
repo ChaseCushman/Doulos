@@ -1,72 +1,47 @@
-// Import necessary AWS SDK modules
+const express = require('express');
+const bodyParser = require('body-parser');
 const AWS = require('aws-sdk');
 
-// Initialize AWS SDK
-AWS.config.update({ region: 'us-east-2' }); 
+const app = express();
+const port = 3000;
+
+// Configure AWS SDK
+AWS.config.update({ region: 'us-east-2' });
 
 // Initialize DynamoDB
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
-// Lambda function to handle API requests
-exports.handler = async (event) => {
-    // Extract user ID from JWT token
-    const userId = event.requestContext.authorizer.claims.sub;
+app.use(bodyParser.json());
 
-    // Parse request body
-    const requestBody = JSON.parse(event.body);
+// Endpoint to add a task
+app.post('/tasks', async (req, res) => {
+    const { userId, task } = req.body;
 
-    if (requestBody.action === 'addTask') {
-        const task = requestBody.task;
-        const success = await addTaskToDynamoDB(userId, task);
-        if (success) {
-            return {
-                statusCode: 200,
-                body: JSON.stringify({ message: 'Task added successfully' })
-            };
-        } else {
-            return {
-                statusCode: 500,
-                body: JSON.stringify({ message: 'Failed to add task' })
-            };
-        }
-    } else if (requestBody.action === 'listTasks') {
-        const tasks = await listTasksFromDynamoDB(userId);
-        return {
-            statusCode: 200,
-            body: JSON.stringify(tasks)
-        };
-    } else {
-        return {
-            statusCode: 400,
-            body: JSON.stringify({ message: 'Invalid action' })
-        };
-    }
-};
-
-// Function to add a task to DynamoDB
-async function addTaskToDynamoDB(userId, task) {
     const params = {
-        TableName: 'DoulosDB', 
+        TableName: 'TaskManager',
         Item: {
             userId: userId,
-            taskId: Date.now().toString(), // Generate a unique ID for the task
-            taskName: task
+            taskId: Date.now().toString(), // Generate unique task ID
+            taskName: task,
+            completed: false
         }
     };
 
     try {
         await dynamoDB.put(params).promise();
-        return true;
+        res.status(201).json({ message: 'Task added successfully' });
     } catch (error) {
         console.error('Error adding task to DynamoDB:', error);
-        return false;
+        res.status(500).json({ error: 'Failed to add task' });
     }
-}
+});
 
-// Function to list tasks from DynamoDB
-async function listTasksFromDynamoDB(userId) {
+// Endpoint to get all tasks for a user
+app.get('/tasks/:userId', async (req, res) => {
+    const userId = req.params.userId;
+
     const params = {
-        TableName: 'DoulosDB', 
+        TableName: 'TaskManager',
         KeyConditionExpression: 'userId = :userId',
         ExpressionAttributeValues: {
             ':userId': userId
@@ -75,9 +50,60 @@ async function listTasksFromDynamoDB(userId) {
 
     try {
         const data = await dynamoDB.query(params).promise();
-        return data.Items;
+        res.status(200).json(data.Items);
     } catch (error) {
-        console.error('Error listing tasks from DynamoDB:', error);
-        return [];
+        console.error('Error getting tasks from DynamoDB:', error);
+        res.status(500).json({ error: 'Failed to retrieve tasks' });
     }
-}
+});
+
+// Endpoint to mark a task as completed
+app.put('/tasks/:userId/:taskId/complete', async (req, res) => {
+    const { userId, taskId } = req.params;
+
+    const params = {
+        TableName: 'TaskManager',
+        Key: {
+            userId: userId,
+            taskId: taskId
+        },
+        UpdateExpression: 'set completed = :completed',
+        ExpressionAttributeValues: {
+            ':completed': true
+        },
+        ReturnValues: 'UPDATED_NEW'
+    };
+
+    try {
+        await dynamoDB.update(params).promise();
+        res.status(200).json({ message: 'Task marked as completed' });
+    } catch (error) {
+        console.error('Error marking task as completed:', error);
+        res.status(500).json({ error: 'Failed to mark task as completed' });
+    }
+});
+
+// Endpoint to delete a task
+app.delete('/tasks/:userId/:taskId', async (req, res) => {
+    const { userId, taskId } = req.params;
+
+    const params = {
+        TableName: 'TaskManager',
+        Key: {
+            userId: userId,
+            taskId: taskId
+        }
+    };
+
+    try {
+        await dynamoDB.delete(params).promise();
+        res.status(200).json({ message: 'Task deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting task:', error);
+        res.status(500).json({ error: 'Failed to delete task' });
+    }
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
