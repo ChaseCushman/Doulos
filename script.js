@@ -33,10 +33,8 @@ async function addTask() {
     try {
         const response = await fetch(API_URL, {
             method: 'POST',
-            mode: 'no-cors',
             headers: {
-                'Content-Type': 'application/json',
-                "Accept" : "application/json"
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({ taskName: taskInput })
         });
