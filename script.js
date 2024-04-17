@@ -1,4 +1,4 @@
-const API_URL = 'https://t85uqonty0.execute-api.us-east-2.amazonaws.com/dev';
+const API_URL = 'https://t85uqonty0.execute-api.us-east-2.amazonaws.com';
 
 
 // Function to fetch tasks from API and render them
