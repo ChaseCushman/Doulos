@@ -9,11 +9,11 @@ async function fetchTasks() {
         if (response.ok) {
             const data = await response.json();
             renderTasks(data.Items);
-        } catch (error) {
+        } /*else {
             console.error('Error fetching tasks:', error);
-        }
-    } else {
-        console.error('Failed to enable CORS');
+        */}
+    } catch (error) {
+        console.error('Failed to enable CORS', error);
     }
 }
 
