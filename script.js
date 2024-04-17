@@ -5,10 +5,15 @@ const API_URL = 'https://t85uqonty0.execute-api.us-east-2.amazonaws.com/dev';
 async function fetchTasks() {
     try {
         const response = await fetch(`${API_URL}?TableName=DoulosDB`, {
-    method: 'OPTIONS'
-});
-        const data = await response.json();
-        renderTasks(data.Items);
+            method: 'OPTIONS',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (response.ok) {
+            const data = await response.json();
+            renderTasks(data.Items);
+        }
     } catch (error) {
         console.error('Error fetching tasks:', error);
     }
