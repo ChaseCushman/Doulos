@@ -1,25 +1,19 @@
 const API_URL = 'https://t85uqonty0.execute-api.us-east-2.amazonaws.com/dev';
 
-// Enable CORS
-const response = await fetch(`${API_URL}?TableName=DoulosDB`, {
-    method: 'OPTIONS'
-});
-
-// Check if the response is successful before proceeding with the fetchTasks function
-if (response.ok) {
-    // Call fetchTasks function here
-} else {
-    console.error('Failed to enable CORS');
-}
-
 // Function to fetch tasks from API and render them
 async function fetchTasks() {
     try {
-        const response = await fetch(`${API_URL}?TableName=DoulosDB`);
-        const data = await response.json();
-        renderTasks(data.Items);
-    } catch (error) {
-        console.error('Error fetching tasks:', error);
+        const response = await fetch(`${API_URL}?TableName=DoulosDB`, {
+            method: 'OPTIONS'
+        });
+        if (response.ok) {
+            const data = await response.json();
+            renderTasks(data.Items);
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+        }
+    } else {
+        console.error('Failed to enable CORS');
     }
 }
 
