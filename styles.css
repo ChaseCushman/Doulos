@@ -3,9 +3,7 @@
     margin: 0 auto;
     padding: 20px;
     font-family: Arial, sans-serif;
-    background-image: url("https://wallpapercave.com/wp/wp8822111.jpg");
-    background-size: cover;
-    opacity: 0.6;
+    background: rgba(0, 0, 0, 0.3);
 }
 
 #task-form input[type="text"] {
@@ -35,4 +33,7 @@
     cursor: pointer;
 }
 
-
+body {
+    background-image: url("https://wallpapercave.com/wp/wp8822111.jpg");
+    background-size: cover;
+}
