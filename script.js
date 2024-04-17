@@ -1,6 +1,6 @@
 const API_URL = 'https://t85uqonty0.execute-api.us-east-2.amazonaws.com/dev';
 
-const response = await fetch(`${API_URL}?TableName=DoulosDB`, {
+const response = fetch(`${API_URL}?TableName=DoulosDB`, {
     method: 'OPTIONS'
 });
 if (response.ok) {
