@@ -31,3 +31,7 @@
     border: none;
     cursor: pointer;
 }
+
+body {
+    background-image: url("https://pbs.twimg.com/media/F5iE5kLW4AA9EEn.jpg");
+}
