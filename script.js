@@ -1,11 +1,11 @@
-const API_URL = 'https://t85uqonty0.execute-api.us-east-2.amazonaws.com/dev';
+const API_URL = 'https://uy5j64sv72.execute-api.us-east-2.amazonaws.com/dev';
 
 // Function to fetch tasks from API and render them
 async function fetchTasks() {
     try {
-        const response = await fetch(API_URL);
+        const response = await fetch(`${API_URL}?TableName=DoulosDB`);
         const data = await response.json();
-        renderTasks(data);
+        renderTasks(data.Items);
     } catch (error) {
         console.error('Error fetching tasks:', error);
     }
@@ -27,20 +27,17 @@ function renderTasks(tasks) {
 }
 
 // Function to add a new task
-async function addTask() {
-    const taskInput = document.getElementById('task').value;
-    if (taskInput.trim() === '') return;
+async function addTask(taskName) {
     try {
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ taskName: taskInput })
+            body: JSON.stringify({ TableName: 'DoulosDB', Item: { taskName: taskName } })
         });
         if (response.ok) {
             fetchTasks(); // Refresh task list
-            document.getElementById('task').value = ''; // Clear input field
         } else {
             console.error('Failed to add task');
         }
@@ -52,8 +49,12 @@ async function addTask() {
 // Function to delete a task
 async function deleteTask(taskId) {
     try {
-        const response = await fetch(`${API_URL}/${taskId}`, {
-            method: 'DELETE'
+        const response = await fetch(`${API_URL}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ TableName: 'DoulosDB', Key: { taskId: taskId } })
         });
         if (response.ok) {
             fetchTasks(); // Refresh task list
