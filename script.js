@@ -3,12 +3,7 @@ const API_URL = 'https://t85uqonty0.execute-api.us-east-2.amazonaws.com/dev';
 // Function to fetch tasks from API and render them
 async function fetchTasks() {
     try {
-        const response = await fetch(API_URL, {
-        method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+        const response = await fetch(API_URL);
         const data = await response.json();
         renderTasks(data);
     } catch (error) {
