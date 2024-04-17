@@ -11,7 +11,7 @@ async function fetchTasks() {
             renderTasks(data.Items);
         } /*else {
             console.error('Error fetching tasks:', error);
-        */}
+        }*/
     } catch (error) {
         console.error('Failed to enable CORS', error);
     }
