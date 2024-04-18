@@ -36,9 +36,6 @@ async function addTask(taskName) {
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
-                "Access-Control-Allow-Headers": "Accept",
-                "Access-Control-Allow-Methods": "DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT",
-                "Access-Control-Allow-Origin": "*",
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ TableName: 'DoulosDB', Item: { taskName: taskName } })
@@ -57,9 +54,6 @@ async function deleteTask(taskId) {
         const response = await fetch(API_URL, {
             method: 'DELETE',
             headers: {
-                "Access-Control-Allow-Headers": "Accept",
-                "Access-Control-Allow-Methods": "DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT",
-                "Access-Control-Allow-Origin": "*",
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ TableName: 'DoulosDB', Key: { taskId: taskId } })
