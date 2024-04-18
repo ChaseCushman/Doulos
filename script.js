@@ -1,4 +1,4 @@
-const API_URL = 'https://j4cbe0afa0.execute-api.us-east-2.amazonaws.com/dev';
+const API_URL = 'https://j4cbe0afa0.execute-api.us-east-2.amazonaws.com/dev/ANY';
 
 // Function to fetch tasks from API and render them
 async function fetchTasks() {
