@@ -19,10 +19,10 @@ function renderTasks(tasks) {
     tasks.forEach(task => {
         const listItem = document.createElement('li');
         listItem.textContent = task.taskName;
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
-        deleteButton.onclick = () => deleteTask(task.taskId);
-        listItem.appendChild(deleteButton);
+        //const deleteButton = document.createElement('button');
+        //deleteButton.textContent = 'Delete';
+        //deleteButton.onclick = () => deleteTask(task.taskId);
+        //listItem.appendChild(deleteButton);
         taskList.appendChild(listItem);
     });
 }
@@ -48,7 +48,7 @@ async function addTask(taskName) {
 }
 
 // Function to delete a task
-async function deleteTask(taskId) {
+/*async function deleteTask(taskId) {
     try {
         const response = await fetch(`${API_URL}`, {
             method: 'DELETE',
@@ -65,7 +65,7 @@ async function deleteTask(taskId) {
     } catch (error) {
         console.error('Error deleting task:', error);
     }
-}
+}*/
 
 // Fetch tasks when the page loads
 fetchTasks();
