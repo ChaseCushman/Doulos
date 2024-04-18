@@ -94,7 +94,7 @@ const API_URL = 'https://j4cbe0afa0.execute-api.us-east-2.amazonaws.com/dev';
 // Function to fetch tasks from API and render them
 async function fetchTasks() {
     try {
-        const response = await fetch(`${API_URL}`);
+        const response = await fetch(API_URL);
         const data = await response.json();
         if (data.Items) {
             renderTasks(data.Items);
@@ -121,26 +121,8 @@ function renderTasks(tasks) {
     });
 }
 
-// Function to add a new task
-async function addTask() {
-    try {
-        // Get the task name from the input field
-        const taskInput = document.getElementById('task-input').value;
-        
-        if (taskInput.trim() === '') return; // Don't add empty tasks
-
-        // Call the addTask function with the task name
-        await addTaskToAPI(taskInput);
-
-        // Refresh task list after adding the task
-        fetchTasks();
-    } catch (error) {
-        console.error('Error adding task:', error);
-    }
-}
-
 // Function to add a new task to the API
-async function addTaskToAPI(taskName) {
+async function addTask(taskName) {
     try {
         const response = await fetch(API_URL, {
             method: 'POST',
@@ -160,7 +142,7 @@ async function addTaskToAPI(taskName) {
 // Function to delete a task
 async function deleteTask(taskId) {
     try {
-        const response = await fetch(`${API_URL}`, {
+        const response = await fetch(API_URL, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
