@@ -20,8 +20,38 @@
             <h2>Task List</h2>
             <ul id="task-list-items"></ul>
         </div>
+        <div id="feedback-message"></div>
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Get the form and input element
+        const form = document.getElementById('add-task-form');
+        const input = document.getElementById('task');
+        // Add event listener for form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Prevent default form submission
+            try {
+                const taskName = input.value.trim();
+                if (taskName === '') throw new Error('Task name cannot be empty');
+                await addTask(taskName);
+                input.value = ''; // Clear input field after successful submission
+                displayMessage('Task added successfully', 'success');
+            } catch (error) {
+                displayMessage(error.message, 'error');
+            }
+        });
+
+        // Function to display feedback messages
+        function displayMessage(message, type) {
+            const feedbackMessage = document.getElementById('feedback-message');
+            feedbackMessage.textContent = message;
+            feedbackMessage.classList.remove('success', 'error');
+            feedbackMessage.classList.add(type);
+            setTimeout(() => {
+                feedbackMessage.textContent = '';
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
