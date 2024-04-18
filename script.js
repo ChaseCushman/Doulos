@@ -6,11 +6,16 @@ async function fetchTasks() {
     try {
         const response = await fetch(`${API_URL}`);
         const data = await response.json();
-        renderTasks(data.Items);
+        if (data.Items) {
+            renderTasks(data.Items);
+        } else {
+            console.error('No tasks found.');
+        }
     } catch (error) {
         console.error('Error fetching tasks:', error);
     }
 }
+
 
 // Function to render tasks in the UI
 function renderTasks(tasks) {
