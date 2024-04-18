@@ -1,6 +1,5 @@
 const API_URL = 'https://j4cbe0afa0.execute-api.us-east-2.amazonaws.com/dev';
 
-
 // Function to fetch tasks from API and render them
 async function fetchTasks() {
     try {
@@ -15,7 +14,6 @@ async function fetchTasks() {
         console.error('Error fetching tasks:', error);
     }
 }
-
 
 // Function to render tasks in the UI
 function renderTasks(tasks) {
@@ -33,7 +31,25 @@ function renderTasks(tasks) {
 }
 
 // Function to add a new task
-async function addTask(taskName) {
+async function addTask() {
+    try {
+        // Get the task name from the input field
+        const taskInput = document.getElementById('task-input').value;
+        
+        if (taskInput.trim() === '') return; // Don't add empty tasks
+
+        // Call the addTask function with the task name
+        await addTaskToAPI(taskInput);
+
+        // Refresh task list after adding the task
+        fetchTasks();
+    } catch (error) {
+        console.error('Error adding task:', error);
+    }
+}
+
+// Function to add a new task to the API
+async function addTaskToAPI(taskName) {
     try {
         const response = await fetch(API_URL, {
             method: 'POST',
@@ -42,13 +58,11 @@ async function addTask(taskName) {
             },
             body: JSON.stringify({ TableName: 'DoulosDB', Item: { taskName: taskName } })
         });
-        if (response.ok) {
-            fetchTasks(); // Refresh task list
-        } else {
-            console.error('Failed to add task');
+        if (!response.ok) {
+            throw new Error('Failed to add task');
         }
     } catch (error) {
-        console.error('Error adding task:', error);
+        throw error;
     }
 }
 
@@ -62,11 +76,11 @@ async function deleteTask(taskId) {
             },
             body: JSON.stringify({ TableName: 'DoulosDB', Key: { taskId: taskId } })
         });
-        if (response.ok) {
-            fetchTasks(); // Refresh task list
-        } else {
-            console.error('Failed to delete task');
+        if (!response.ok) {
+            throw new Error('Failed to delete task');
         }
+        // Refresh task list after deleting the task
+        fetchTasks();
     } catch (error) {
         console.error('Error deleting task:', error);
     }
