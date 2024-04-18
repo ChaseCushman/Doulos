@@ -4,7 +4,9 @@ const API_URL = 'https://j4cbe0afa0.execute-api.us-east-2.amazonaws.com/dev';
 // Function to fetch tasks from API and render them
 async function fetchTasks() {
     try {
-        const response = await fetch(`https://j4cbe0afa0.execute-api.us-east-2.amazonaws.com/dev`);
+        const response = await fetch(`${APU_URL}`, {
+            mode: 'cors'
+        });
         const data = await response.json();
         renderTasks(data.Items);
     } catch (error) {
