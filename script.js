@@ -33,11 +33,11 @@ function renderTasks(tasks) {
 // Function to add a new task to the API
 async function addTask(taskName) {
     try {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
         const response = await fetch(API_URL, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: myHeaders,
             body: JSON.stringify({ TableName: 'DoulosDB', Item: { taskName: taskName } })
         });
         if (!response.ok) {
@@ -51,11 +51,11 @@ async function addTask(taskName) {
 // Function to delete a task
 async function deleteTask(taskId) {
     try {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
         const response = await fetch(API_URL, {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: myHeaders,
             body: JSON.stringify({ TableName: 'DoulosDB', Key: { taskId: taskId } })
         });
         if (!response.ok) {
