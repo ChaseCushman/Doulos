@@ -21,7 +21,7 @@ function renderTasks(tasks) {
     taskList.innerHTML = '';
     tasks.forEach(task => {
         const listItem = document.createElement('li');
-        listItem.textContent = task.taskName;
+        listItem.textContent = task.taskID;
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete';
         deleteButton.onclick = () => deleteTask(task.taskId);
@@ -38,7 +38,7 @@ async function addTask(taskName) {
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: myHeaders,
-            body: JSON.stringify({ TableName: 'DoulosDB', Item: { taskName: taskName } })
+            body: JSON.stringify({ TableName: 'DoulosDB', Item: { taskID: taskID } })
         });
         if (!response.ok) {
             throw new Error('Failed to add task');
