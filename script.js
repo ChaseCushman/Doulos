@@ -40,6 +40,8 @@ async function addTask(taskID) {
         if (!response.ok) {
             throw new Error('Failed to add task');
         }
+        // Refresh task list after adding the task
+        fetchTasks();
     } catch (error) {
         throw error;
     }
