@@ -31,7 +31,7 @@ function renderTasks(tasks) {
 }
 
 // Function to add a new task to the API
-async function addTask(taskName) {
+async function addTask(taskID) {
     try {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
