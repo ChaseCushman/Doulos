@@ -50,9 +50,6 @@ async function deleteTask(taskId) {
     try {
         const response = await fetch(API_URL, {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
             body: JSON.stringify({ tasks: taskId }) // Using 'tasks' as the partition key
         });
         if (!response.ok) {
