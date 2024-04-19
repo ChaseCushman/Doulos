@@ -37,8 +37,8 @@ async function addTask(taskID) {
         myHeaders.append("Content-Type", "application/json");
         const response = await fetch(API_URL, {
             method: 'POST',
-            //headers: myHeaders,
-            body: JSON.stringify({ TableName: 'DoulosDB', Item: { tasks: taskID } })
+            headers: myHeaders,
+            body: JSON.stringify({ tasks: taskID }) // Use 'tasks' as the attribute name
         });
         if (!response.ok) {
             throw new Error('Failed to add task');
@@ -48,6 +48,7 @@ async function addTask(taskID) {
     }
 }
 
+
 // Function to delete a task
 async function deleteTask(taskId) {
     try {
@@ -56,7 +57,7 @@ async function deleteTask(taskId) {
         const response = await fetch(API_URL, {
             method: 'DELETE',
             //headers: myHeaders,
-            body: JSON.stringify({ TableName: 'DoulosDB', Key: { tasks: taskId } })
+            body: JSON.stringify({ tasks: taskID })
         });
         if (!response.ok) {
             throw new Error('Failed to delete task');
