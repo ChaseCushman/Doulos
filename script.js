@@ -37,7 +37,7 @@ async function addTask(taskID) {
         myHeaders.append("Content-Type", "application/json");
         const response = await fetch(API_URL, {
             method: 'POST',
-            headers: myHeaders,
+            //headers: myHeaders,
             body: JSON.stringify({ TableName: 'DoulosDB', Item: { tasks: taskID } })
         });
         if (!response.ok) {
@@ -55,7 +55,7 @@ async function deleteTask(taskId) {
         myHeaders.append("Content-Type", "application/json");
         const response = await fetch(API_URL, {
             method: 'DELETE',
-            headers: myHeaders,
+            //headers: myHeaders,
             body: JSON.stringify({ TableName: 'DoulosDB', Key: { tasks: taskId } })
         });
         if (!response.ok) {
