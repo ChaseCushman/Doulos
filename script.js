@@ -1,5 +1,4 @@
-//const API_URL = 'https://j4cbe0afa0.execute-api.us-east-2.amazonaws.com/dev/Doulos-Function';
-const API_URL = 'https://d3ocgwcbslg24v.cloudfront.net';
+const API_URL = 'https://j4cbe0afa0.execute-api.us-east-2.amazonaws.com/dev/Doulos-Function';
 
 // Function to fetch tasks from API and render them
 async function fetchTasks() {
