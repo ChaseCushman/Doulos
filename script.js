@@ -21,10 +21,10 @@ function renderTasks(tasks) {
     taskList.innerHTML = '';
     tasks.forEach(task => {
         const listItem = document.createElement('li');
-        listItem.textContent = task.taskID;
+        listItem.textContent = task.tasks; // Using the partition key 'tasks'
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete';
-        deleteButton.onclick = () => deleteTask(task.taskId);
+        deleteButton.onclick = () => deleteTask(task.tasks); // Passes the partition key value to the delete function
         listItem.appendChild(deleteButton);
         taskList.appendChild(listItem);
     });
@@ -38,7 +38,7 @@ async function addTask(taskID) {
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: myHeaders,
-            body: JSON.stringify({ tasks: taskID }) // Use 'tasks' as the attribute name
+            body: JSON.stringify({ tasks: taskID }) // Using 'tasks' as the partition key
         });
         if (!response.ok) {
             throw new Error('Failed to add task');
@@ -48,7 +48,6 @@ async function addTask(taskID) {
     }
 }
 
-
 // Function to delete a task
 async function deleteTask(taskId) {
     try {
@@ -56,8 +55,8 @@ async function deleteTask(taskId) {
         myHeaders.append("Content-Type", "application/json");
         const response = await fetch(API_URL, {
             method: 'DELETE',
-            //headers: myHeaders,
-            body: JSON.stringify({ tasks: taskID })
+            headers: myHeaders,
+            body: JSON.stringify({ tasks: taskId }) // Using 'tasks' as the partition key
         });
         if (!response.ok) {
             throw new Error('Failed to delete task');
